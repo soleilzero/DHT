@@ -1,6 +1,6 @@
 import simpy
 from node import Node, Ring
-
+from message import Message
 
 # Simulation
 env = simpy.Environment()
@@ -14,6 +14,11 @@ node3 = Node(env, 3)
 ring.add_node(node1)
 ring.add_node(node2)
 ring.add_node(node3)
+
+message = Message(node1, node3, "Hi node3, its node1")
+message.send()
+message.foward()
+print(message)
 
 # Simulating the removal of a node
 ring.remove_node(node2)

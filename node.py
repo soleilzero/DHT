@@ -29,6 +29,11 @@ class Node:
             print(f"Node {self.node_id} left. Node {self.left_neighbor.node_id} is now connected to Node {self.right_neighbor.node_id}.")
         else:
             print(f"Node {self.node_id} has no neighbors to leave.")
+            
+    def receive_message(self, message):
+        
+        print(f"Node {self.node_id} received message from Node {message.sender.node_id}: '{message.content}'")
+        message.deliver()
 
     def __str__(self):
         return f"Node {self.node_id}"
