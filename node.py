@@ -48,7 +48,7 @@ class Node:
     def receive_message(self, message):
         
         print(f"Node {self.node_id} received message from Node {message.sender.node_id}: '{message.content}'")
-        message.deliver()
+        message.send()
 
     def __str__(self):
         return f"Node {self.node_id}"

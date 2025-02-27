@@ -10,15 +10,18 @@ ring = Ring(env)
 node1 = Node(env, 1)
 node2 = Node(env, 2)
 node3 = Node(env, 3)
+node4 = Node(env, 4)
 
 ring.add_node(node1)
 ring.add_node(node2)
 ring.add_node(node3)
+ring.add_node(node4)
 
-message = Message(node1, node3, "Hi node3, its node1")
-message.send()
-message.foward()
-print(message)
+#message
+message1 = Message(node1, node3, "Hi node3, its node1")
+message1.send()
+message2 = Message(node4, node2, "Hi node 2, its the new node 4")
+message2.send()
 
 # Simulating the removal of a node
 ring.remove_node(node2)
