@@ -59,17 +59,18 @@ class Ring:
         """Adds a new node to the ring. If the ring is empty, the node points to itself."""
         if not self.nodes:
             # The first node in the ring connects to itself
-            node.left_neighbor = node
-            node.right_neighbor = node
+            node.set_left_neighbor(node)
+            node.set_right_neighbor(node)
             self.nodes.append(node)
             print(f"Node {node.node_id} is the first node in the ring.")
         else:
             # Connect the new node to the current last node
+            first_node = self.nodes[0]
             last_node = self.nodes[-1]
-            last_node.right_neighbor = node
-            node.left_neighbor = last_node
-            node.right_neighbor = self.nodes[0]
-            self.nodes[0].left_neighbor = node
+            last_node.set_right_neighbor(node)
+            node.set_left_neighbor(last_node)
+            node.set_right_neighbor(first_node)
+            first_node.left_neighbor = node
             self.nodes.append(node)
             print(f"Node {node.node_id} joined between Node {last_node.node_id} and {self.nodes[0].node_id}")
 
