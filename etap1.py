@@ -49,10 +49,15 @@ class Ring:
             self.nodes.append(node)
             print(f"Node {node.node_id} is the first node in the ring.")
         else:
-            # If there are already nodes, it picks a random node for the new node to connect to
-            random_node = random.choice(self.nodes)
-            node.join(random_node)
+            # Connect the new node to the current last node
+            last_node = self.nodes[-1]
+            last_node.right_neighbor = node
+            node.left_neighbor = last_node
+            node.right_neighbor = self.nodes[0]
+            self.nodes[0].left_neighbor = node
             self.nodes.append(node)
+            print(f"Node {node.node_id} joined between Node {last_node.node_id} and {self.nodes[0].node_id}")
+
 
     def remove_node(self, node):
         """Removes a node from the ring."""
