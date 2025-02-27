@@ -9,6 +9,12 @@ class Node:
         self.left_neighbor = None  
         self.right_neighbor = None  
 
+    def set_left_neighbor(self, other_node):
+        self.left_neighbor = other_node
+
+    def set_right_neighbor(self, other_node):
+        self.right_neighbor = other_node
+
     def join(self, other_node):
         """The node joins the ring by connecting to an existing node."""
         print(f"Node {self.node_id} is joining the ring.")
