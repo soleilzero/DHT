@@ -1,3 +1,5 @@
+from message import Message
+
 class Node:
     def __init__(self, env, node_id):
         self.env = env  
@@ -15,15 +17,28 @@ class Node:
         self.left_neighbor = left_neighbor
         self.right_neighbor = right_neighbor
 
-    def set_left_neighbor_of_right_neighbor(self, other_node):
-        self.right_neighbor.set_left_neighbor(other_node)
+    def send_message(self, receiver_id, content):
+        """Sends a message to a specific node using ring-based routing."""
+        message = Message(self, receiver_id, content)
+        print(f"Node {self.node_id} is sending a message to Node {receiver_id}: '{content}'")
+        self.route_message(message)
 
-    def set_right_neighbor_of_left_neighbor(self, other_node):
-        self.left_neighbor.set_right_neighbor(other_node)
-        
-    def receive_message(self, message):
-        print(f"Node {self.node_id} received message from Node {message.sender.node_id}: '{message.content}'")
-        message.send()
+    def route_message(self, message):
+        """Routes the message through the ring until it reaches the destination."""
+        if self.node_id == message.receiver_id:
+            print(f"Node {self.node_id} received message: '{message.content}'")
+        else:
+            # Determine the closest neighbor to forward the message
+            clockwise_distance = (message.receiver_id - self.node_id) % 1000
+            counter_clockwise_distance = (self.node_id - message.receiver_id) % 1000
+
+            if clockwise_distance < counter_clockwise_distance:
+                next_hop = self.right_neighbor
+            else:
+                next_hop = self.left_neighbor
+
+            print(f"Node {self.node_id} forwarding message to Node {next_hop.node_id}")
+            next_hop.route_message(message)
 
     def __str__(self):
         return f"Node {self.node_id}"
