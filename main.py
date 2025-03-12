@@ -1,5 +1,6 @@
 import simpy
-from node import Node, Ring
+from node import Node
+from ring import Ring
 from message import Message
 
 # Simulation
