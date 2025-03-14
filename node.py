@@ -1,11 +1,14 @@
 from message import Message
+import hashlib
+
 
 class Node:
     def __init__(self, env, node_id):
-        self.env = env  
-        self.node_id = node_id  
-        self.left_neighbor = None  
-        self.right_neighbor = None  
+        self.env = env
+        self.node_id = node_id
+        self.left_neighbor = None
+        self.right_neighbor = None
+        self.storage = {}
 
     def set_left_neighbor(self, other_node):
         self.left_neighbor = other_node
@@ -20,7 +23,9 @@ class Node:
     def send_message(self, receiver_id, content):
         """Sends a message to a specific node using ring-based routing."""
         message = Message(self, receiver_id, content)
-        print(f"Node {self.node_id} is sending a message to Node {receiver_id}: '{content}'")
+        print(
+            f"Node {self.node_id} is sending a message to Node {receiver_id}: '{content}'"
+        )
         self.route_message(message)
 
     def route_message(self, message):
@@ -39,6 +44,47 @@ class Node:
 
             print(f"Node {self.node_id} forwarding message to Node {next_hop.node_id}")
             next_hop.route_message(message)
+
+    def put_data(self, key, value):
+        """Store a key-value pair in the appropriate node using consistent hashing."""
+        if self.left_neighbor == None or self.right_neighbor == None:
+            print(f"Node '{self.node_id}' is not in the ring")
+            return
+        target_node = self.find_responsible_node(key)
+        print(f"Storing key '{key}' in Node {target_node.node_id}")
+        target_node.storage[key] = value  # Store the value
+
+    def get_data(self, key):
+        if self.left_neighbor == None or self.right_neighbor == None:
+            print(f"Node '{self.node_id}' is not in the ring")
+            return
+        """Retrieve a value from the appropriate node."""
+        target_node = self.find_responsible_node(key)
+        if key in target_node.storage:
+            print(
+                f"Key '{key}' found in Node {target_node.node_id} with value: {target_node.storage[key]}"
+            )
+            return target_node.storage[key]
+        else:
+            print(f"Key '{key}' not found in the ring.")
+            return None
+
+    def find_responsible_node(self, key):
+        """Find the node responsible for a given key using hashing."""
+        key_hash = (
+            int(hashlib.sha256(key.encode()).hexdigest(), 16) % 1000
+        )  # Hash to a number in range
+        current = self
+
+        print(key, "was hashed to", key_hash)
+
+        # Traverse the ring to find the node with the closest larger ID
+        while current.right_neighbor.node_id != self.node_id:
+            if current.node_id >= key_hash:
+                return current
+            current = current.right_neighbor
+
+        return current  # Default to last node if none found
 
     def __str__(self):
         return f"Node {self.node_id}"
