@@ -33,6 +33,11 @@ def main():
     print(node1.get_data("user2"))
 
     send_message_between_nodes(node1, node5.node_id, f"Hello from Node {node1.node_id}!")
+    send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
+
+    # Send message quicker by "cheating"
+    node2.add_long_link(node5)
+    send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
 
     # Run the simulation
     env.run(until=100)
