@@ -33,13 +33,13 @@ def main():
     print(node1.get_data("user1"))
     print(node1.get_data("user2"))
 
-    send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
+    node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
 
     display_routing_table_of_all_nodes_in(ring.nodes)
 
     # Send message quicker by "cheating"
     node2.add_long_link(node5)
-    send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
+    node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
 
     display_routing_table_of_all_nodes_in(ring.nodes)
     # Run the simulation
@@ -52,11 +52,6 @@ def display_routing_table_of_all_nodes_in(nodes):
         print(f"Node {node.node_id} routing table: {node.routing_table}")
     print("\n")
 
-
-def send_message_between_nodes(sender, receiver_id, content):
-    print(f"\n\n#----------> Sending message from Node {sender.node_id} to Node {receiver_id}:")
-    message = Message(sender, receiver_id, content)
-    sender.route_message(message)
 
 
 if __name__ == "__main__":
