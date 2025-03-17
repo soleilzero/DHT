@@ -35,10 +35,13 @@ def main():
     send_message_between_nodes(node1, node5.node_id, f"Hello from Node {node1.node_id}!")
     send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
 
+    display_routing_table_of_all_nodes_in(ring.nodes)
+
     # Send message quicker by "cheating"
     node2.add_long_link(node5)
     send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
 
+    display_routing_table_of_all_nodes_in(ring.nodes)
     # Run the simulation
     env.run(until=100)
 
@@ -47,11 +50,12 @@ def display_routing_table_of_all_nodes_in(nodes):
     print("\n\n#----------> Display routing table:")
     for node in nodes:
         print(f"Node {node.node_id} routing table: {node.routing_table}")
+    print("\n")
 
 
 def send_message_between_nodes(sender, receiver_id, content):
-    print(f"\nSending message from Node {sender.node_id} to Node {receiver_id}:")
-    message = type('Message', (object,), {"content": content, "receiver_id": receiver_id})()
+    print(f"\n\n#----------> Sending message from Node {sender.node_id} to Node {receiver_id}:")
+    message = type('Message', (object,), {"sender": sender, "content": content, "receiver_id": receiver_id})()
     sender.route_message(message)
 
 
