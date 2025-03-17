@@ -29,22 +29,6 @@ class Node:
         )
         self.route_message(message)
 
-    def route_message(self, message):
-        """Routes the message through the ring until it reaches the destination."""
-        if self.node_id == message.receiver_id:
-            print(f"Node {self.node_id} received message: '{message.content}'")
-        else:
-            # Determine the closest neighbor to forward the message
-            clockwise_distance = (message.receiver_id - self.node_id) % 1000
-            counter_clockwise_distance = (self.node_id - message.receiver_id) % 1000
-
-            if clockwise_distance < counter_clockwise_distance:
-                next_hop = self.right_neighbor
-            else:
-                next_hop = self.left_neighbor
-
-            print(f"Node {self.node_id} forwarding message to Node {next_hop.node_id}")
-            next_hop.route_message(message)
 
     def put_data(self, key, value):
         """Store a key-value pair in the appropriate node using consistent hashing."""
