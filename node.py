@@ -82,24 +82,31 @@ class Node:
         """Routes the message through the ring until it reaches the destination."""
         if self.node_id == message.receiver_id:
             print(f"Node {self.node_id} received message: '{message.content}'")
+
+        # Check if there's a long link for faster routing
+        elif message.receiver_id in self.routing_table:
+            self.long_link_message(message)
+
+        # Standard ring routing if no long link is available
         else:
-            # Check if there's a long link for faster routing
-            if message.receiver_id in self.routing_table:
-                next_hop = self.routing_table[message.receiver_id]
-                print(f"Node {self.node_id} sending message directly to Node {next_hop.node_id} via long link")
-                next_hop.route_message(message)
-            else:
-                # Standard ring routing if no long link is available
-                clockwise_distance = (message.receiver_id - self.node_id) % 1000
-                counter_clockwise_distance = (self.node_id - message.receiver_id) % 1000
+            self.hop_message(message)
 
-                if clockwise_distance < counter_clockwise_distance:
-                    next_hop = self.right_neighbor
-                else:
-                    next_hop = self.left_neighbor
+    def long_link_message(self, message):
+        next_hop = self.routing_table[message.receiver_id]
+        print(f"Node {self.node_id} sending message directly to Node {next_hop.node_id} via long link")
+        next_hop.route_message(message)
 
-                print(f"Node {self.node_id} forwarding message to Node {next_hop.node_id}")
-                next_hop.route_message(message)
+    def hop_message(self, message):
+        clockwise_distance = (message.receiver_id - self.node_id) % 1000
+        counter_clockwise_distance = (self.node_id - message.receiver_id) % 1000
+
+        if clockwise_distance < counter_clockwise_distance:
+            next_hop = self.right_neighbor
+        else:
+            next_hop = self.left_neighbor
+
+        print(f"Node {self.node_id} forwarding message to Node {next_hop.node_id}")
+        next_hop.route_message(message)
 
     def __str__(self):
         return f"Node {self.node_id}"
