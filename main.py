@@ -32,10 +32,7 @@ def main():
     print(node1.get_data("user1"))
     print(node1.get_data("user2"))
 
-    # Test: Send a message from node1 to node5
-    print("\nSending message from Node 100 to Node 1000:")
-    message = type('Message', (object,), {"content": "Hello from Node 100!", "receiver_id": 1000})()
-    node1.route_message(message)
+    send_message_between_nodes(node1, node5.node_id, f"Hello from Node {node1.node_id}!")
 
     # Run the simulation
     env.run(until=100)
@@ -45,6 +42,12 @@ def display_routing_table_of_all_nodes_in(nodes):
     print("\n\n#----------> Display routing table:")
     for node in nodes:
         print(f"Node {node.node_id} routing table: {node.routing_table}")
+
+
+def send_message_between_nodes(sender, receiver_id, content):
+    print(f"\nSending message from Node {sender.node_id} to Node {receiver_id}:")
+    message = type('Message', (object,), {"content": content, "receiver_id": receiver_id})()
+    sender.route_message(message)
 
 
 if __name__ == "__main__":
