@@ -82,19 +82,23 @@ class Node:
         """Routes the message through the ring until it reaches the destination."""
         if self.node_id == message.receiver_id:
             self.receive_message(message)
-
-        # Check if there's a long link for faster routing
-        elif message.receiver_id in self.routing_table:
-            self.long_link_message(message)
-
-        # Standard ring routing if no long link is available
         else:
-            self.hop_message(message)
+            message.visited_nodes.append(self)
+            # Check if there's a long link for faster routing
+            if message.receiver_id in self.routing_table:
+                self.long_link_message(message)
+
+            # Standard ring routing if no long link is available
+            else:
+                self.hop_message(message)
 
     def receive_message(self, message):
         print(f"Node {self.node_id} received message: '{message.content}'")
         if message.sender not in self.routing_table:
             self.routing_table[message.sender.node_id] = message.sender
+        for node in message.visited_nodes:
+            if node not in self.routing_table:
+                self.routing_table[node.node_id] = node
 
     def long_link_message(self, message):
         next_hop = self.routing_table[message.receiver_id]

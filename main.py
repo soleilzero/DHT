@@ -1,6 +1,7 @@
 import simpy
 from node import Node
 from ring import Ring
+from message import Message
 
 
 def main():
@@ -32,7 +33,6 @@ def main():
     print(node1.get_data("user1"))
     print(node1.get_data("user2"))
 
-    send_message_between_nodes(node1, node5.node_id, f"Hello from Node {node1.node_id}!")
     send_message_between_nodes(node2, node5.node_id, f"Hello from Node {node1.node_id}!")
 
     display_routing_table_of_all_nodes_in(ring.nodes)
@@ -55,7 +55,7 @@ def display_routing_table_of_all_nodes_in(nodes):
 
 def send_message_between_nodes(sender, receiver_id, content):
     print(f"\n\n#----------> Sending message from Node {sender.node_id} to Node {receiver_id}:")
-    message = type('Message', (object,), {"sender": sender, "content": content, "receiver_id": receiver_id})()
+    message = Message(sender, receiver_id, content)
     sender.route_message(message)
 
 
