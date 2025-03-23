@@ -121,10 +121,10 @@ class Node:
     def receive_message(self, message):
         print(f"Node {self.node_id} received message: '{message.content}'")
         if message.sender not in self.routing_table:
-            self.routing_table[message.sender.node_id] = message.sender
+            self.add_long_link(message.sender)
         for node in message.visited_nodes:
             if node not in self.routing_table:
-                self.routing_table[node.node_id] = node
+                self.add_long_link(node)
 
     def long_link_message(self, message):
         next_hop = self.routing_table[message.receiver_id]
