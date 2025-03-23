@@ -23,9 +23,10 @@ ring.add_node(node5)
 node1.put_data("user1", {"prenom": "Daniel", "x": "123", "y": "123"})
 node1.put_data("user2", {"prenom": "Sol", "x": "123", "y": "123"})
 
+ring.remove_node(node3)
+
 # Retrieve data
-print(node1.get_data("user1"))
-print(node1.get_data("user2"))
+print(node2.get_data("user1"))
 
 # Run the simulation
 env.run(until=100)

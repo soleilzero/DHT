@@ -46,28 +46,54 @@ class Node:
             next_hop.route_message(message)
 
     def put_data(self, key, value):
-        """Store a key-value pair in the appropriate node using consistent hashing."""
-        if self.left_neighbor == None or self.right_neighbor == None:
+        """Store a key-value pair in the responsible node and replicate to two neighbors."""
+        if self.left_neighbor is None or self.right_neighbor is None:
             print(f"Node '{self.node_id}' is not in the ring")
             return
+
         target_node = self.find_responsible_node(key)
+        
+        # Store data in the responsible node
         print(f"Storing key '{key}' in Node {target_node.node_id}")
-        target_node.storage[key] = value  # Store the value
+        target_node.storage[key] = value  
+
+        # Replicate data to left and right neighbors
+        left_replica = target_node.left_neighbor
+        right_replica = target_node.right_neighbor
+        
+        left_replica.storage[key] = value
+        right_replica.storage[key] = value
+        
+        print(f"Replicated key '{key}' to Node {left_replica.node_id} and Node {right_replica.node_id}")
 
     def get_data(self, key):
-        if self.left_neighbor == None or self.right_neighbor == None:
+        """Retrieve a value from the responsible node or its neighbors in case of failure."""
+        if self.left_neighbor is None or self.right_neighbor is None:
             print(f"Node '{self.node_id}' is not in the ring")
-            return
-        """Retrieve a value from the appropriate node."""
-        target_node = self.find_responsible_node(key)
-        if key in target_node.storage:
-            print(
-                f"Key '{key}' found in Node {target_node.node_id} with value: {target_node.storage[key]}"
-            )
-            return target_node.storage[key]
-        else:
-            print(f"Key '{key}' not found in the ring.")
             return None
+
+        target_node = self.find_responsible_node(key)
+
+        # Check responsible node
+        if key in target_node.storage:
+            print(f"Key '{key}' found in Node {target_node.node_id} with value: {target_node.storage[key]}")
+            return target_node.storage[key]
+
+        # If not found, check the replicas (left and right neighbors)
+        left_replica = target_node.left_neighbor
+        right_replica = target_node.right_neighbor
+
+        if key in left_replica.storage:
+            print(f"Key '{key}' found in replica Node {left_replica.node_id} with value: {left_replica.storage[key]}")
+            return left_replica.storage[key]
+
+        if key in right_replica.storage:
+            print(f"Key '{key}' found in replica Node {right_replica.node_id} with value: {right_replica.storage[key]}")
+            return right_replica.storage[key]
+
+        print(f"Key '{key}' not found in the ring.")
+        return None
+
 
     def find_responsible_node(self, key):
         """Find the node responsible for a given key using hashing."""
