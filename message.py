@@ -3,3 +3,4 @@ class Message:
         self.sender = sender
         self.receiver_id = receiver_id
         self.content = content
+        self.visited_nodes = []

@@ -1,3 +1,5 @@
+import random
+
 class Ring:
     """Class that represents the ring, managing the nodes."""
     def __init__(self, env):
@@ -34,8 +36,6 @@ class Ring:
 
             left_neighbor.set_right_neighbor(right_neighbor)
             right_neighbor.set_left_neighbor(left_neighbor)
-
-            node.set_neighbors(None, None) #Remove references from neighboors
 
             self.nodes.remove(node)
             print(f"Node {node.node_id} left. Node {left_neighbor.node_id} is now connected to Node {right_neighbor.node_id}.")
