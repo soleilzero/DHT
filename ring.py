@@ -31,6 +31,9 @@ class Ring:
     def remove_node(self, node):
         """Removes a node from the ring and updates neighbors."""
         if len(self.nodes) > 1:
+            # Antes de remover o nó, replicar os dados para os vizinhos dos vizinhos
+            self.replicate_data(node)
+            
             left_neighbor = node.left_neighbor
             right_neighbor = node.right_neighbor
 
@@ -41,3 +44,18 @@ class Ring:
             print(f"Node {node.node_id} left. Node {left_neighbor.node_id} is now connected to Node {right_neighbor.node_id}.")
         else:
             print("Cannot remove the last node from the ring.")
+
+    def replicate_data(self, node):
+        """Replicate data from node to one of its neighbors (left or right)."""
+        # Verifica se o nó tem vizinhos e se há dados para replicar
+        if node.left_neighbor is None or node.right_neighbor is None:
+            print(f"Node '{node.node_id}' cannot replicate data because it has no neighbors.")
+            return
+
+        # Escolher aleatoriamente se será replicado para o vizinho à esquerda ou à direita
+        neighbor_to_replicate = random.choice([node.left_neighbor, node.right_neighbor])
+
+        # Replicar os dados para o vizinho escolhido
+        for key, value in node.storage.items():
+            print(f"Replicating key '{key}' to Node {neighbor_to_replicate.node_id}.")
+            neighbor_to_replicate.storage[key] = value

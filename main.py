@@ -23,34 +23,37 @@ def main():
     ring.add_node(node4)
     ring.add_node(node5)
 
-    display_routing_table_of_all_nodes_in(ring.nodes)
+#     display_routing_table_of_all_nodes_in(ring.nodes)
 
     # Store data
     node1.put_data("user1", {"prenom": "Daniel", "x": "123", "y": "123"})
-    node1.put_data("user2", {"prenom": "Sol", "x": "123", "y": "123"})
+
+    ring.remove_node(node2)
+    ring.remove_node(node3)
+    ring.remove_node(node4)
+    ring.remove_node(node1)
 
     # Retrieve data
     print(node1.get_data("user1"))
-    print(node1.get_data("user2"))
 
-    node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
+#     node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
 
-    display_routing_table_of_all_nodes_in(ring.nodes)
+#     display_routing_table_of_all_nodes_in(ring.nodes)
 
-    # Send message quicker by "cheating"
-    node2.add_long_link(node5)
-    node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
+#     # Send message quicker by "cheating"
+#     node2.add_long_link(node5)
+#     node2.send_message(node5.node_id, f"Hello from Node {node1.node_id}!")
 
-    display_routing_table_of_all_nodes_in(ring.nodes)
-    # Run the simulation
-    env.run(until=100)
+#     display_routing_table_of_all_nodes_in(ring.nodes)
+#     # Run the simulation
+#     env.run(until=100)
 
 
-def display_routing_table_of_all_nodes_in(nodes):
-    print("\n\n#----------> Display routing table:")
-    for node in nodes:
-        print(f"Node {node.node_id} routing table: {node.routing_table}")
-    print("\n")
+# def display_routing_table_of_all_nodes_in(nodes):
+#     print("\n\n#----------> Display routing table:")
+#     for node in nodes:
+#         print(f"Node {node.node_id} routing table: {node.routing_table}")
+#     print("\n")
 
 
 
