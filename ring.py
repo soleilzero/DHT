@@ -52,10 +52,13 @@ class Ring:
             print(f"Node '{node.node_id}' cannot replicate data because it has no neighbors.")
             return
 
-        # Escolher aleatoriamente se será replicado para o vizinho à esquerda ou à direita
-        neighbor_to_replicate = random.choice([node.left_neighbor, node.right_neighbor])
+        # Sélectionner aléatoirement le voisin du voisin à qui répliquer
+        neighbor_to_replicate = random.choice([
+            node.left_neighbor.left_neighbor, 
+            node.right_neighbor.right_neighbor
+        ])
 
-        # Replicar os dados para o vizinho escolhido
         for key, value in node.storage.items():
             print(f"Replicating key '{key}' to Node {neighbor_to_replicate.node_id}.")
             neighbor_to_replicate.storage[key] = value
+
